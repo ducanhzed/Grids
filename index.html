@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GRID</title>
+    <style>
+        * {
+            margin : 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .grid {
+            display: grid;
+            margin: 0 auto;
+            width: 100%;
+            grid-template-columns: repeat(10, 1fr);
+            grid-auto-rows: 50px;
+            column-gap: 2px;
+            row-gap: 2px;
+            position: relative;
+        }
+
+        div.grid {
+            margin-top: 10px;
+        }
+
+        div.grid>.element {
+            background: pink;
+        }
+
+        header {
+            margin: 0 auto;
+            position: relative;
+            top: 0;
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            grid-auto-rows: 50px;
+            column-gap: 2px;
+            row-gap: 2px;
+            z-index: 10;
+        }
+
+        header>* {
+            background: green;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="grid">
+
+    </header>
+    <div class="form">
+        <label for="cols">Cols :</label>
+        <input type="number" name="cols" id="">
+        <br>
+        <label for="cols">Rows :</label>
+        <input type="number" name="rows" id="">
+        <br>
+        <label for="checkbox">INFINITY MODE</label>
+        <input type="checkbox">
+        <br>
+        <button>SUBMIT</button>
+    </div>
+
+    <div class="grid">
+    </div>
+
+    <script>
+        const infMode = document.querySelector('[type="checkbox"]');
+        const header = document.querySelector('header')
+        const form = document.querySelector('.form');
+        const grid = document.querySelector('div.grid');
+        const inputCols = document.querySelector('input[name="cols"]');
+        const inputRows = document.querySelector('input[name="rows"]');
+        const submit = document.querySelector('button');
+        let rows, cols;
+
+        let appendHeader = (rows) => {
+            header.style.gridTemplateColumns = `repeat(${cols}, 1fr)`
+            header.innerHTML = '';
+            for (let i = 1; i <= cols; i++) {
+                header.innerHTML += `<div class="element">${i}</div>`
+            }
+        }
+
+        let appendGrid = (rows) => {
+            for (let i = 0; i < rows * cols; i++) {
+                grid.innerHTML += `<div class="element">${Math.floor(Math.random() * 1000)}</div>`
+            }
+            grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`
+        }
+
+        submit.onclick = () => {
+            rows = inputRows.value;
+            cols = inputCols.value;
+
+            if (infMode.checked)
+                rows = 100;
+            appendHeader(rows);
+
+            grid.innerHTML = '';
+            appendGrid(rows);
+            form.style.display = 'none';
+        }
+
+        window.onscroll = (e) => {
+            if (window.scrollY >= header.offsetHeight / 2) {
+                header.style.position = 'fixed';
+                grid.style.marginTop += header.offsetHeight + 'px';
+            }
+            if (infMode.checked && window.scrollY + window.innerHeight >= document.body.offsetHeight) {
+                appendGrid(10);
+            }
+        }
+    </script>
+</body>
+
+</html>
